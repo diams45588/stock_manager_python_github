@@ -1,0 +1,22 @@
+name: Python Tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: stock_db
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+      - name: Install dependencies
+        run: pip install mysql-connector-python pytest
+      - name: Initialize database
+        run: python init.py
+      - name: Run tests with unittest
+        run: python -m unittest discover tests -v
+      - name: Run tests with pytest
+        run: pytest -v
